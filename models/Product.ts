@@ -1,26 +1,27 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, model, models } from "mongoose";
 
-export interface IProduct extends Document {
+interface IProduct {
   title: string;
-  description: string;
   category: string;
+  description: string;
   price: number;
-  image: string;
-  seller: mongoose.Types.ObjectId;
-  createdAt: Date;
+  image?: string;
+  owner: mongoose.Types.ObjectId; // Reference to the User who added the product
+  createdAt?: Date;
 }
 
-const ProductSchema: Schema<IProduct> = new Schema(
+const productSchema = new Schema<IProduct>(
   {
     title: { type: String, required: true },
-    description: { type: String, required: true },
     category: { type: String, required: true },
+    description: { type: String, required: true },
     price: { type: Number, required: true },
-    image: { type: String, default: "https://via.placeholder.com/150" },
-    seller: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    image: { type: String },
+    owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
-  { timestamps: true }
+  { timestamps: true } // automatically adds createdAt & updatedAt
 );
 
-export const Product: Model<IProduct> =
-  mongoose.models.Product || mongoose.model<IProduct>("Product", ProductSchema);
+const Product = models.Product || model<IProduct>("Product", productSchema);
+
+export default Product;
