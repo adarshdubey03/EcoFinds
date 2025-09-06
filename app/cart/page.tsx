@@ -8,6 +8,7 @@ export default function CartPage() {
   const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   // Calculate total price
   const totalPrice = cartItems.reduce(
@@ -15,13 +16,54 @@ export default function CartPage() {
     0
   );
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (cartItems.length === 0) return;
 
-    if (confirm("Are you sure you want to place the order?")) {
-      clearCart();
-      alert("Order placed successfully!");
-      router.push("/feed");
+    if (!confirm("Are you sure you want to place the order?")) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No token found");
+
+      // Prepare purchase data
+      const purchaseData = {
+        user: localStorage.getItem("userId") || "guest", // store user ID in localStorage when login
+        products: cartItems.map((item) => ({
+          productId: item.id,
+          title: item.title,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+        totalAmount: totalPrice,
+      };
+
+      // Call the API to save purchase
+      const res = await fetch("/api/purchases/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(purchaseData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Failed to place order");
+      } else {
+        clearCart();
+        alert("Order placed successfully!");
+        router.push("/feed");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Something went wrong while placing the order");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,6 +86,10 @@ export default function CartPage() {
     <div className="bg-gray-50 min-h-screen py-12">
       <div className="max-w-6xl mx-auto px-4">
         <h1 className="text-4xl font-bold mb-10 text-center text-gray-800">Your Cart</h1>
+
+        {error && (
+          <div className="text-red-500 mb-4 text-center font-semibold">{error}</div>
+        )}
 
         <div className="bg-white rounded-2xl shadow-xl p-6 space-y-6">
           {cartItems.map((item: CartItem) => (
@@ -105,9 +151,12 @@ export default function CartPage() {
               </button>
               <button
                 onClick={handlePlaceOrder}
-                className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold shadow"
+                disabled={loading}
+                className={`bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold shadow ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
-                Place Order
+                {loading ? "Placing Order..." : "Place Order"}
               </button>
             </div>
           </div>

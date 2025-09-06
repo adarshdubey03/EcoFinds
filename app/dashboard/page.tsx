@@ -12,7 +12,7 @@ interface UserProfile {
 }
 
 interface Purchase {
-  id: string;
+  _id: string; // changed from id to _id
   productName: string;
   amount: number;
   date: string;
@@ -20,7 +20,7 @@ interface Purchase {
 }
 
 interface Listing {
-  id: string;
+  _id: string; // changed from id to _id
   title: string;
   price: number;
 }
@@ -83,28 +83,23 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* Stats Cards (Profile → Purchases → Listings) */}
+      {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
-        {/* Profile */}
-        <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 hover:shadow-lg transition">
+        <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 hover:shadow-lg transition cursor-pointer">
           <User className="w-8 h-8 text-green-600" />
           <div>
             <p className="text-gray-500 text-sm">Profile</p>
             <p className="text-xl font-bold text-gray-800">{user?.email}</p>
           </div>
         </div>
-
-        {/* Purchases */}
-        <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 hover:shadow-lg transition">
+        <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 hover:shadow-lg transition cursor-pointer">
           <ShoppingCart className="w-8 h-8 text-green-600" />
           <div>
             <p className="text-gray-500 text-sm">Total Purchases</p>
             <p className="text-2xl font-bold text-gray-800">{purchases.length}</p>
           </div>
         </div>
-
-        {/* Listings */}
-        <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 hover:shadow-lg transition">
+        <div className="bg-white rounded-xl shadow p-6 flex items-center gap-4 hover:shadow-lg transition cursor-pointer">
           <Package className="w-8 h-8 text-green-600" />
           <div>
             <p className="text-gray-500 text-sm">My Listings</p>
@@ -127,8 +122,8 @@ export default function DashboardPage() {
             <div className="space-y-4">
               {purchases.map((p) => (
                 <div
-                  key={p.id}
-                  className="flex justify-between items-center border border-gray-200 rounded-xl p-4 hover:shadow-md transition bg-gray-50"
+                  key={p._id} // fixed key
+                  className="flex justify-between items-center border border-gray-200 rounded-xl p-4 hover:shadow-md transition bg-gray-50 cursor-pointer"
                 >
                   <div>
                     <p className="font-medium text-gray-800">{p.productName}</p>
@@ -140,9 +135,7 @@ export default function DashboardPage() {
                     <p className="font-semibold text-gray-900">₹{p.amount}</p>
                     <p
                       className={`text-sm font-medium mt-1 ${
-                        p.status === "completed"
-                          ? "text-green-600"
-                          : "text-yellow-600"
+                        p.status === "completed" ? "text-green-600" : "text-yellow-600"
                       }`}
                     >
                       {p.status.charAt(0).toUpperCase() + p.status.slice(1)}
@@ -166,13 +159,13 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {listings.map((l) => (
                 <div
-                  key={l.id}
-                  className="bg-gray-50 border border-gray-200 rounded-xl p-4 shadow hover:shadow-lg transition flex flex-col justify-between"
+                  key={l._id} // fixed key
+                  className="bg-gray-50 border border-gray-200 rounded-xl p-4 shadow hover:shadow-lg transition flex flex-col justify-between cursor-pointer"
                 >
                   <h3 className="font-semibold text-gray-800">{l.title}</h3>
                   <p className="text-gray-600 mt-2">Price: ₹{l.price}</p>
                   <Link
-                    href={`/edit-product/${l.id}`}
+                    href={`/edit-product/${l._id}`}
                     className="mt-4 inline-block text-green-600 font-medium hover:underline"
                   >
                     Edit

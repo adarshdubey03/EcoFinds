@@ -60,7 +60,6 @@ export default function ProductDetailPage() {
       return;
     }
 
-    // Placeholder: You can later integrate checkout/payment
     alert("Purchase flow will be implemented here.");
   };
 
@@ -78,18 +77,20 @@ export default function ProductDetailPage() {
     );
 
   return (
-    <div className="bg-gray-50 min-h-screen py-12">
-      <div className="max-w-6xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+    <div className="bg-gray-50 min-h-screen py-12 px-4 md:px-8">
+      <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col md:flex-row transition hover:shadow-2xl">
         {/* Product Image */}
-        <div className="md:w-1/2 bg-gray-100 flex items-center justify-center">
+        <div className="md:w-1/2 bg-gray-100 flex items-center justify-center relative group">
           {product.image ? (
             <img
               src={product.image}
               alt={product.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           ) : (
-            <span className="text-gray-400 text-lg">No Image Available</span>
+            <span className="absolute text-gray-400 text-lg bg-gray-200 px-4 py-2 rounded-full">
+              No Image Available
+            </span>
           )}
         </div>
 
@@ -98,20 +99,21 @@ export default function ProductDetailPage() {
           <div>
             <h1 className="text-4xl font-bold text-gray-800 mb-4">{product.title}</h1>
             <p className="text-green-600 font-extrabold text-3xl mb-6">₹{product.price}</p>
+
             <h2 className="text-gray-700 text-lg font-semibold mb-2">Description</h2>
             <p className="text-gray-600 leading-relaxed">{product.description}</p>
           </div>
 
-          <div className="mt-8 flex flex-col gap-4 md:flex-row">
+          <div className="mt-8 flex flex-col md:flex-row gap-4">
             <button
               onClick={handleAddToCart}
-              className="flex-1 w-full bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition shadow-lg hover:shadow-xl"
+              className="flex-1 w-full bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition shadow-md hover:shadow-lg"
             >
               Add to Cart
             </button>
             <button
               onClick={handleBuyNow}
-              className="flex-1 w-full bg-green-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-green-700 transition shadow-lg hover:shadow-xl"
+              className="flex-1 w-full bg-green-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-green-700 transition shadow-md hover:shadow-lg"
             >
               Buy Now
             </button>

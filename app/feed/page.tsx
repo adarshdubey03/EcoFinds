@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useCart } from "../context/CartContext";
+import { ShoppingCart, Eye } from "lucide-react";
 
 interface Product {
   _id: string;
@@ -9,6 +10,7 @@ interface Product {
   price: number;
   description: string;
   image?: string;
+  badge?: string; // optional badge/tag
 }
 
 export default function FeedPage() {
@@ -42,20 +44,26 @@ export default function FeedPage() {
   };
 
   if (loading)
-    return <p className="text-center mt-20 text-gray-500 text-lg">Loading products...</p>;
+    return (
+      <p className="text-center mt-20 text-gray-500 text-lg animate-pulse">
+        Loading products...
+      </p>
+    );
 
   return (
     <div className="bg-gray-50 min-h-screen py-12">
       {/* Header */}
-      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-8 text-center mb-10">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">Explore EcoFinds Products</h1>
+      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 text-center mb-12 cursor-pointer">
+        <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
+          Explore EcoFinds Products
+        </h1>
         <p className="text-gray-600 text-lg">
           Browse through a curated collection of eco-friendly products.
         </p>
       </div>
 
       {/* Products Grid */}
-      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {products.length === 0 ? (
           <p className="col-span-full text-center text-gray-500 text-lg">
             No products available.
@@ -64,36 +72,60 @@ export default function FeedPage() {
           products.map((product) => (
             <div
               key={product._id}
-              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden flex flex-col"
+              className="relative bg-white rounded-3xl shadow-md hover:shadow-2xl transition-transform transform hover:-translate-y-1 hover:scale-105 overflow-hidden group cursor-pointer"
             >
-              {product.image && (
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="w-full h-48 object-cover"
-                />
-              )}
-              <div className="p-5 flex flex-col justify-between flex-1">
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-800 mb-1">{product.title}</h2>
-                  <p className="text-gray-600 text-sm line-clamp-3">{product.description}</p>
-                </div>
-                <div className="mt-4 flex justify-between items-center">
-                  <span className="text-green-600 font-bold text-lg">₹{product.price}</span>
-                </div>
-                <div className="mt-3 flex gap-2">
+              {/* Image */}
+              <div className="relative w-full h-56 sm:h-64 md:h-48 overflow-hidden cursor-pointer">
+                {product.image ? (
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">
+                    No Image
+                  </div>
+                )}
+
+                {/* Badge */}
+                {product.badge && (
+                  <span className="absolute top-3 left-3 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-md cursor-pointer">
+                    {product.badge}
+                  </span>
+                )}
+
+                {/* Subtle Hover overlay buttons */}
+                <div className="absolute inset-0 bg-black bg-opacity-10 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
                   <a
                     href={`/product/${product._id}`}
-                    className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition font-medium text-sm text-center"
+                    className="flex items-center gap-1 bg-white text-gray-800 px-4 py-2 rounded-full shadow-md hover:bg-gray-100 transition cursor-pointer"
                   >
-                    View
+                    <Eye size={16} /> View
                   </a>
                   <button
                     onClick={() => handleAddToCart(product)}
-                    className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium text-sm"
+                    className="flex items-center gap-1 bg-green-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-green-600 transition cursor-pointer"
                   >
-                    Add to Cart
+                    <ShoppingCart size={16} /> Add
                   </button>
+                </div>
+              </div>
+
+              {/* Product Info */}
+              <div className="p-5 flex flex-col justify-between flex-1">
+                <div>
+                  <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1 cursor-pointer">
+                    {product.title}
+                  </h2>
+                  <p className="text-gray-600 text-sm line-clamp-3 cursor-pointer">
+                    {product.description}
+                  </p>
+                </div>
+                <div className="mt-3 flex justify-between items-center cursor-pointer">
+                  <span className="text-green-600 font-bold text-lg">
+                    ₹{product.price}
+                  </span>
                 </div>
               </div>
             </div>

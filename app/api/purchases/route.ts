@@ -1,3 +1,4 @@
+// app/api/purchases/route.ts
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { Purchase } from "@/models/Purchase";
@@ -13,16 +14,29 @@ export async function GET(req: Request) {
     const token = authHeader.split(" ")[1];
     if (!token) return new NextResponse("Unauthorized", { status: 401 });
 
-    // Verify JWT and extract user ID
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-    const userId = decoded.id; // Make sure your JWT has { id: user._id }
+    const userId = decoded.id;
 
-    // Fetch purchases for this user
-    const purchases = await Purchase.find({ user: userId }).sort({ date: -1 });
+    console.log("Fetching purchases for user:", userId);
 
-    return NextResponse.json({ purchases });
-  } catch (err) {
-    console.error(err);
-    return new NextResponse("Invalid token", { status: 401 });
+    const purchases = await Purchase.find({ user: userId }).sort({ purchasedAt: -1 });
+
+    const response = purchases.map((p) => ({
+      _id: p._id.toString(),
+      products: p.products.map((prod: any) => ({
+        productId: prod.productId,
+        title: prod.title,
+        price: prod.price,
+        quantity: prod.quantity,
+      })),
+      totalAmount: p.total,
+      purchasedAt: p.purchasedAt,
+      status: p.status,
+    }));
+
+    return NextResponse.json({ purchases: response }, { status: 200 });
+  } catch (err: any) {
+    console.error("Error fetching purchases:", err);
+    return new NextResponse("Invalid token or server error", { status: 401 });
   }
 }
