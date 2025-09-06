@@ -1,3 +1,4 @@
+// utils/db.ts
 import mongoose, { Mongoose } from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI as string;
@@ -11,7 +12,7 @@ interface MongooseCache {
   promise: Promise<Mongoose> | null;
 }
 
-
+// Cache for dev hot reloads
 let cached: MongooseCache = (global as any).mongoose;
 
 if (!cached) {
