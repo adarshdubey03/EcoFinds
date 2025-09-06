@@ -10,7 +10,7 @@ EcoFinds is a modern, eco-friendly marketplace built with Next.js. Users can bro
 
 Watch the walkthrough here:
 
-👉 EcoFinds Demo (Loom Video)
+👉 https://www.loom.com/share/89eb30f1297e4eea8735da54cb55c942
 
 🚀 Features
 
