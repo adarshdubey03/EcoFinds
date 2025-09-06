@@ -24,14 +24,19 @@ export default function SignupPage() {
 
       const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        router.push("/feed"); // redirect after signup
-      } else {
+      if (!res.ok) {
         setError(data.error || "Signup failed");
+        return;
       }
-    } catch {
-      setError("Something went wrong");
+
+      // ✅ Store JWT in localStorage immediately
+      localStorage.setItem("token", data.token);
+
+      // Redirect to feed/home
+      router.push("/feed");
+    } catch (err) {
+      console.error("Signup error:", err);
+      setError("Something went wrong. Please try again.");
     }
   };
 

@@ -24,13 +24,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Read token on client side
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}
       >
         <CartProvider>
-          <ClientNavbar /> {/* client component */}
+          {/* Key forces Navbar to remount on login/logout */}
+          <ClientNavbar key={token || "guest"} />
           <main>{children}</main>
         </CartProvider>
       </body>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Leaf,
   Search,
@@ -24,44 +24,28 @@ export default function Navbar() {
   const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [mounted, setMounted] = useState(false); // <--- new
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMounted(true); // now we are mounted, can access client-only APIs
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setDropdownOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const cartItems: CartItem[] = [
     { id: "1", quantity: 1 },
     { id: "2", quantity: 2 },
   ];
-  const cartItemsCount = cartItems.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
+  const cartItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  // Only render after client mount
-  if (!mounted) return null;
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const isLoggedIn = !!token;
 
   if (pathname === "/login" || pathname === "/signup") return null;
 
@@ -73,8 +57,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    router.push("/");
+    router.push("/"); // RootLayout key will force Navbar remount
   };
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {

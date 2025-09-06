@@ -17,20 +17,25 @@ export default function LoginPage() {
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
-        body: JSON.stringify({ email, password }),
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem("token", data.token);
-        router.push("/"); // redirect to home
-      } else {
+      if (!res.ok) {
         setError(data.error || "Login failed");
+        return;
       }
-    } catch {
-      setError("Something went wrong");
+
+      // ✅ Store JWT in localStorage
+      localStorage.setItem("token", data.token);
+
+      // Redirect to home/dashboard
+      router.push("/");
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Something went wrong. Please try again.");
     }
   };
 
