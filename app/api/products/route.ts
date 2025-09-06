@@ -1,4 +1,3 @@
-// app/api/products/route.ts
 import { NextResponse } from "next/server";
 import { connectDB } from "@/utils/db";
 import Product from "@/models/Product";
@@ -37,22 +36,32 @@ export async function POST(req: Request) {
   }
 }
 
-// GET: Fetch products (all, by category, or by owner)
+// GET: Fetch products (all, by category, by owner, or single by ID)
 export async function GET(req: Request) {
   try {
     await connectDB();
 
     const url = new URL(req.url);
+    const id = url.searchParams.get("id"); // fetch single product by ID
     const category = url.searchParams.get("category"); // optional filter
     const owner = url.searchParams.get("owner"); // optional filter
 
-    let filter: any = {};
-    if (category) filter.category = category;
-    if (owner) filter.owner = owner;
+    if (id) {
+      // Single product fetch
+      const product = await Product.findById(id);
+      if (!product) {
+        return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      }
+      return NextResponse.json({ product }, { status: 200 });
+    } else {
+      // Multiple products fetch
+      let filter: any = {};
+      if (category) filter.category = category;
+      if (owner) filter.owner = owner;
 
-    const products = await Product.find(filter).sort({ createdAt: -1 });
-
-    return NextResponse.json({ products }, { status: 200 });
+      const products = await Product.find(filter).sort({ createdAt: -1 });
+      return NextResponse.json({ products }, { status: 200 });
+    }
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
