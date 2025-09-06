@@ -26,10 +26,14 @@ Icons: Lucide-React
 
 State Management: React Context API (CartContext, AuthContext)
 
-💻 Setup
+💻 Setup 
+
 git clone https://github.com/adarshdubey03/ecofinds.git
+
 cd ecofinds
+
 npm install
+
 npm run dev
 
 Open http://localhost:3000
