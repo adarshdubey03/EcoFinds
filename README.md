@@ -1,6 +1,16 @@
 EcoFinds 🌿
 
+Problem Statement
+
+EcoFinds – Sustainable Second-Hand Marketplace
+
 EcoFinds is a modern, eco-friendly marketplace built with Next.js. Users can browse, buy, and sell eco-friendly products with a clean, responsive UI and client-side state management.
+
+🎥 Demo Video
+
+Watch the walkthrough here:
+
+👉 EcoFinds Demo (Loom Video)
 
 🚀 Features
 
@@ -47,7 +57,6 @@ npm install
 Create a .env.local file in the root directory and add:
 
 MONGODB_URI=your-mongodb-connection-string
-
 
 Replace your-mongodb-connection-string with your MongoDB Atlas URI.
 
