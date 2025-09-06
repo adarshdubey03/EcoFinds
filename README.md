@@ -6,11 +6,13 @@ EcoFinds – Sustainable Second-Hand Marketplace
 
 EcoFinds is a modern, eco-friendly marketplace built with Next.js. Users can browse, buy, and sell eco-friendly products with a clean, responsive UI and client-side state management.
 
-🎥 Demo Video
+## 🎥 Demo Video
 
-Watch the walkthrough here:
+Watch the walkthrough: [EcoFinds Demo (Loom)](https://www.loom.com/share/89eb30f1297e4eea8735da54cb55c942)
 
-👉 https://www.loom.com/share/89eb30f1297e4eea8735da54cb55c942
+Or open directly:  
+https://www.loom.com/share/89eb30f1297e4eea8735da54cb55c942
+
 
 🚀 Features
 
