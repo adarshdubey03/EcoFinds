@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Leaf, Search, ShoppingCart, User, Menu, X } from "lucide-react";
+import { Leaf, Search, ShoppingCart, User, Menu, X, Box, ClipboardList, LogOut } from "lucide-react";
 
 interface CartItem {
     id: string;
@@ -25,8 +25,6 @@ export default function Navbar() {
         }
     }, []);
 
-
-    // Mock cart data
     const cartItems: CartItem[] = [
         { id: "1", quantity: 1 },
         { id: "2", quantity: 2 },
@@ -60,9 +58,9 @@ export default function Navbar() {
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className={`px-3 py-1 font-medium transition rounded ${pathname === link.href
-                                        ? "bg-green-100 text-green-700"
-                                        : "text-gray-700 hover:bg-green-100 hover:text-green-700"
+                                className={`px-3 py-1 font-medium rounded transition ${pathname === link.href
+                                    ? "bg-green-100 text-green-700"
+                                    : "text-gray-700 hover:bg-green-100 hover:text-green-700"
                                     }`}
                             >
                                 {link.name}
@@ -106,22 +104,26 @@ export default function Navbar() {
 
                                 {/* User Dropdown */}
                                 <div className="relative group">
-                                    <button className="p-2 rounded-full hover:bg-green-50 transition">
+                                    <button className="p-2 rounded-full hover:bg-green-50 transition duration-300">
                                         <User className="w-5 h-5 text-gray-700" />
                                     </button>
-                                    <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg border rounded-md hidden group-hover:block">
-                                        <Link href="/dashboard" className="block px-4 py-2 hover:bg-green-100">Dashboard</Link>
-                                        <Link href="/purchases" className="block px-4 py-2 hover:bg-green-100">Purchases</Link>
-                                        <hr className="my-1" />
+                                    <div className="absolute right-0 mt-2 w-48 bg-white shadow-xl border border-gray-200 rounded-xl opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-300 transform -translate-y-2 group-hover:translate-y-0 z-50">
+                                        <Link href="/dashboard" className="flex items-center gap-2 px-4 py-3 text-gray-800 hover:bg-green-100 rounded-t-xl transition">
+                                            <User className="w-4 h-4 text-gray-700" /> Dashboard
+                                        </Link>
+                                        <Link href="/purchases" className="flex items-center gap-2 px-4 py-3 text-gray-800 hover:bg-green-100 transition">
+                                            <ClipboardList className="w-4 h-4 text-gray-700" /> Purchases
+                                        </Link>
+                                        <hr className="border-gray-200 my-1" />
                                         <button
-                                            className="w-full text-left px-4 py-2 hover:bg-green-100"
+                                            className="flex items-center gap-2 w-full text-left px-4 py-3 text-red-600 hover:bg-red-100 rounded-b-xl transition"
                                             onClick={() => {
                                                 localStorage.removeItem("token");
                                                 setIsLoggedIn(false);
                                                 window.location.href = "/"; // redirect to home
                                             }}
                                         >
-                                            Logout
+                                            <LogOut className="w-4 h-4" /> Logout
                                         </button>
                                     </div>
                                 </div>
@@ -180,7 +182,7 @@ export default function Navbar() {
                                         setIsLoggedIn(false);
                                         window.location.href = "/";
                                     }}
-                                    className="w-full text-left px-3 py-2 rounded hover:bg-green-100 transition"
+                                    className="w-full text-left px-3 py-2 rounded hover:bg-red-100 transition text-red-600"
                                 >
                                     Logout
                                 </button>
