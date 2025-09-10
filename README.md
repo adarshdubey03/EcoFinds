@@ -53,14 +53,21 @@ Install dependencies
 npm install
 
 
-Create a .env.local file in the root directory and add:
+Create a .env.local file in the root directory and add the following:
 
 MONGODB_URI=your-mongodb-connection-string
 
-Replace your-mongodb-connection-string with your MongoDB Atlas URI.
+JWT_SECRET=your-jwt-secret
 
-Generate a secret with:
 
+Replace your-mongodb-connection-string with your MongoDB Atlas URI or MongoDB Compass URI.
+
+Replace your-jwt-secret with a secure random string. You can generate one with Node.js or OpenSSL:
+
+# Node.js
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
+# OR OpenSSL
 openssl rand -base64 32
 
 
@@ -69,8 +76,10 @@ Run the development server
 npm run dev
 
 
-Open http://localhost:3000
- in your browser.
+Open your browser
+
+http://localhost:3000
+
 
 👥 Team Members
 
